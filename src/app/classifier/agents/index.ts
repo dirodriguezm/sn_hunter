@@ -1,10 +1,10 @@
-import { IStoreModule } from "@/store/store.types";
-import { state } from "./state";
 import { mutations } from "./mutations";
 import { actions } from "./actions";
 import { getters } from "./getters";
+import { state } from "./state";
+import { IStoreModule } from "@/store/store.types";
 
-export const CandidatesModule: IStoreModule = {
+export const ClassifiersModule: IStoreModule = {
   namespaced: true,
   state,
   mutations,

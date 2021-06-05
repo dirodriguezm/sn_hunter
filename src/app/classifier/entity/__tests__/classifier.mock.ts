@@ -1,6 +1,7 @@
-import { Classifier, ClassifierDTO } from '@/Classes/Classifier/Entity/classifier.types'
+import { ClassifierData} from '../classifier.types'
+import { Classifier } from '../classifier'
 
-export const mockClassifiersData: ClassifierDTO[] = [
+export const mockClassifiersData: ClassifierData[] = [
 	{
 		"classifier_name": "lc_classifier",
 		"classifier_version": "bulk_0.0.1",
@@ -79,8 +80,8 @@ export const mockClassifiersData: ClassifierDTO[] = [
 
 export const mockClassifiers: Classifier[] = [
 	{
-		"classifierName": "lc_classifier",
-		"classifierVersion": "bulk_0.0.1",
+		"classifier_name": "lc_classifier",
+		"classifier_version": "bulk_0.0.1",
 		"classes": [
 			"SNIa",
 			"SNIbc",
@@ -100,8 +101,8 @@ export const mockClassifiers: Classifier[] = [
 		]
 	},
 	{
-		"classifierName": "lc_classifier_top",
-		"classifierVersion": "bulk_0.0.1",
+		"classifier_name": "lc_classifier_top",
+		"classifier_version": "bulk_0.0.1",
 		"classes": [
 			"Transient",
 			"Stochastic",
@@ -109,8 +110,8 @@ export const mockClassifiers: Classifier[] = [
 		]
 	},
 	{
-		"classifierName": "lc_classifier_transient",
-		"classifierVersion": "bulk_0.0.1",
+		"classifier_name": "lc_classifier_transient",
+		"classifier_version": "bulk_0.0.1",
 		"classes": [
 			"SNIa",
 			"SNIbc",
@@ -119,8 +120,8 @@ export const mockClassifiers: Classifier[] = [
 		]
 	},
 	{
-		"classifierName": "lc_classifier_stochastic",
-		"classifierVersion": "bulk_0.0.1",
+		"classifier_name": "lc_classifier_stochastic",
+		"classifier_version": "bulk_0.0.1",
 		"classes": [
 			"QSO",
 			"AGN",
@@ -130,8 +131,8 @@ export const mockClassifiers: Classifier[] = [
 		]
 	},
 	{
-		"classifierName": "lc_classifier_periodic",
-		"classifierVersion": "bulk_0.0.1",
+		"classifier_name": "lc_classifier_periodic",
+		"classifier_version": "bulk_0.0.1",
 		"classes": [
 			"LPV",
 			"E",
@@ -142,8 +143,8 @@ export const mockClassifiers: Classifier[] = [
 		]
 	},
 	{
-		"classifierName": "stamp_classifier",
-		"classifierVersion": "bulk_0.0.1",
+		"classifier_name": "stamp_classifier",
+		"classifier_version": "bulk_0.0.1",
 		"classes": [
 			"SN",
 			"AGN",

@@ -1,27 +1,26 @@
-import { Candidate } from '@/Classes/Candidate/Entity/candidate.types'
-import { CandidateState } from '@/Classes/Candidate/Agents/state'
 import { MutationTree } from 'vuex'
+import { CandidateState } from '@/app/candidate/agents/state';
+import { CandidateData } from '@/app/candidate/entity';
 
 export enum MutationTypes {
-	GET_REQUEST = 'GET_REQUEST',
-	GET_SUCCESS = 'GET_SUCCESS',
-	GET_ERROR = 'GET_ERROR'
+    SET_REQUEST = 'SET_REQUEST',
+    SET_SUCCESS = 'SET_SUCCESS',
+    SET_ERROR = 'SET_ERROR',
 }
 
-const mutations: MutationTree<CandidateState> = {
-	[MutationTypes.GET_REQUEST](state) {
+export const mutations: MutationTree<CandidateState> = {
+	[MutationTypes.SET_REQUEST](state) {
 		state.loading = true
 		state.error = null
 	},
-	[MutationTypes.GET_ERROR](state, error) {
+	[MutationTypes.SET_ERROR](state, error) {
 		state.loading = false
 		state.error = error
 	},
-	[MutationTypes.GET_SUCCESS](state, candidates: Candidate[]) {
+	[MutationTypes.SET_SUCCESS](state, candidates: CandidateData[]) {
 		state.loading = false
 		state.error = null
 		state.candidates = candidates
 	},
 }
 
-export default mutations

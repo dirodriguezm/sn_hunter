@@ -3,6 +3,7 @@ import MockAdapter from "axios-mock-adapter";
 import { inject } from "inversify-props";
 import { IAxiosCreator } from "../HttpService";
 import { mockCandidatesData } from "@/app/candidate/entity/__tests__/candidate.mock";
+import { mockClassifiersData } from '@/app/classifier/entity';
 
 export type TestActions =
   | "ok"
@@ -41,17 +42,17 @@ export class MockAxiosCreator implements IAxiosCreator {
       };
       return [200, JSON.stringify(response)];
     });
+    this.mock.onGet("/classifiers").reply((_config: any) => {
+      const response = mockClassifiersData
+      return [200, JSON.stringify(response)]
+    })
   }
   setErrorActions() {
-    this.mock.onGet("/watchlist").networkError();
-    this.mock.onPost("/users").networkError();
-    this.mock.onPost("/users/login").networkError();
-    this.mock.onGet("/users").networkError();
-  }
+    this.mock.onGet("/objects").networkError();
+    this.mock.onGet("/classifiers").networkError();
+      }
   setTimeoutActions() {
-    this.mock.onGet("/watchlist").timeout();
-    this.mock.onPost("/users").timeout();
-    this.mock.onPost("/users/login").timeout();
-    this.mock.onGet("/users").timeout();
-  }
+    this.mock.onGet("/objects").timeout();
+    this.mock.onGet("/classifiers").timeout();
+      }
 }

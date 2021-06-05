@@ -1,13 +1,13 @@
-import { CandidateState } from '@/Classes/Candidate/Agents/state'
-import { IRootState } from '@/Store/store.types'
 import { GetterTree } from 'vuex'
+import { CandidateState } from '@/app/candidate/agents/state';
+import { IRootState } from '@/store/store.types';
 
 
-const getters: GetterTree<CandidateState, IRootState> = {
+export const getters: GetterTree<CandidateState, IRootState> = {
 	get: (state) => state.candidates,
 	length: (state) => state.candidates.length,
 	isLoading: (state) => state.loading,
-	isError: (state) => state.error
+	isError: (state) => state.error != null,
+	getError: (state) => state.error
 }
 
-export default getters

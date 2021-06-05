@@ -27,11 +27,25 @@ export class CandidateService implements ICandidateRepository {
       return combine(listOfCandidateResults);
     };
 
-    const filterString = qs.stringify(filter, {
+    return await this.httpService.get(
+      {
+        url: "/objects",
+        config: { params: filter, paramsSerializer: this.parseQueryString },
+      },
+      { parseTo }
+    );
+  }
+
+  private parseQueryString(filters: CandidateSearchFilters): string {
+    return qs.stringify(filters, {
       skipNulls: true,
       arrayFormat: "repeat",
+      filter: (value) => {
+        if (value === "") {
+          return;
+        }
+        return value;
+      },
     });
-
-    return await this.httpService.get({ url: "/objects" }, { parseTo });
   }
 }

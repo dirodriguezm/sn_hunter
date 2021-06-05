@@ -6,6 +6,7 @@ import {
   TestActions,
 } from "@/shared/http/__tests__/HttpService.mock";
 import { ICandidateRepository } from "../../entity";
+import { CandidateSearchFilters } from "../candidate.service.types";
 
 beforeEach(() => {
   resetContainer();
@@ -18,7 +19,12 @@ describe("CandidateService", () => {
     it("should get candidates when http request success", async () => {
       container.bind<TestActions>("ActionType").toConstantValue("ok");
       const service = container.get<ICandidateRepository>(cid.CandidateService);
-      const result = await service.getCandidates({});
+      const result = await service.getCandidates({
+        classifier: "test",
+        class: "test",
+        firstmjd: ["test"],
+        page: 1
+      } as CandidateSearchFilters);
       expect(result.isOk()).toBeTruthy();
     });
     it("should return err when http request error", async () => {

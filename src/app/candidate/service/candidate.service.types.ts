@@ -10,4 +10,9 @@ export type CandidateAPIResponse = {
   items: CandidateData[];
 };
 
-export interface CandidateSearchFilters {}
+export interface CandidateSearchFilters {
+  classifier: string | null
+  class: string | null
+  firstmjd: Array<string>
+  page: number
+}
