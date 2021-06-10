@@ -16,6 +16,10 @@ describe("Store", () => {
       const storeCreator = container.get<IStoreCreator>(cid.StoreCreator);
       const store = storeCreator.create();
       expect(store).toHaveProperty("_modulesNamespaceMap.candidates/");
+      expect(store).toHaveProperty("_modulesNamespaceMap.candidate/");
+      expect(store).toHaveProperty("_modulesNamespaceMap.classifiers/");
+      expect(store).toHaveProperty("_modulesNamespaceMap.detection/");
+      expect(store).toHaveProperty("_modulesNamespaceMap.detections/");
     });
   });
 });

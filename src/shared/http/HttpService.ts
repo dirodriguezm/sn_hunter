@@ -68,6 +68,7 @@ export class HttpService implements IHttpService {
     parser: Parser<T, M>
   ): Promise<Result<M, ParseError | HttpError>> {
     try {
+      console.log("URL", url)
       const response = await this.axiosService.get<T>(url, config);
       return this._parseFailable<T, M>(response.data, parser.parseTo);
     } catch (error) {

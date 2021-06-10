@@ -1,5 +1,7 @@
 import Vue, { PropOptions } from "vue";
 import { CandidateData } from "@/app/candidate/entity";
+import { mapActions } from "vuex";
+import { ActionTypes as candidateActions } from "@/app/candidate/agents/candidate/actions";
 
 export default Vue.extend({
   name: "CandidatesComponent",
@@ -24,39 +26,38 @@ export default Vue.extend({
     };
   },
 
-  methods: {
-    async selectCandidate(cand: CandidateData) {
-      await this.$store.dispatch("selected/deselect");
-      await this.$store.dispatch("selected/setCandidate", cand);
-      await this.$store.dispatch(
-        "detection/getDetections",
-        this.$store.getters["selected/getCandidate"].oid
-      );
-      await this.$store.dispatch(
-        "selected/setDetection",
-        this.$store.getters["detection/getFirst"]
-      );
+  mounted() {
+    if (this.candidates) {
+      this.selectedCandidate = this.candidates[0].oid;
+    }
+  },
+
+  watch: {
+    selectedCandidate(newVal) {
+      const candidate = this.candidates.filter((a) => a.oid === newVal);
+      if (candidate.length) {
+        this.selectCandidate(candidate[0]);
+      }
     },
+  },
+
+  methods: {
+    ...mapActions("candidate", { selectCandidate: candidateActions.select }),
 
     rowClicked(row: CandidateData) {
       this.selectedCandidate = row.oid;
-      this.selectCandidate(row);
     },
 
     keyPressed(e: KeyboardEvent) {
-      const index = this.candidates
-        .map((x) => x.oid)
-        .indexOf(this.selectedCandidate);
-      if (e.key == "ArrowUp" && index > 0) {
-        this.selectedCandidate = this.candidates[index - 1].oid;
-        this.selectCandidate(
-          this.candidates.filter((a) => a.oid === this.selectedCandidate)[0]
-        );
-      } else if (e.key == "ArrowDown" && index < 9) {
-        this.selectedCandidate = this.candidates[index + 1].oid;
-        this.selectCandidate(
-          this.candidates.filter((a) => a.oid === this.selectedCandidate)[0]
-        );
+      if (this.candidates) {
+        const index = this.candidates
+          .map((x) => x.oid)
+          .indexOf(this.selectedCandidate);
+        if (e.key == "ArrowUp" && index > 0) {
+          this.selectedCandidate = this.candidates[index - 1].oid;
+        } else if (e.key == "ArrowDown" && index < 9) {
+          this.selectedCandidate = this.candidates[index + 1].oid;
+        }
       }
     },
   },
@@ -67,10 +68,6 @@ export default Vue.extend({
 
   destroyed() {
     window.removeEventListener("keydown", this.keyPressed);
-  },
-
-  mounted() {
-    this.selectedCandidate = this.candidates[0].oid;
   },
 
   render(): Vue.VNode {

@@ -22,6 +22,7 @@
     "axios-mock-adapter": "^1.19.0",
     "core-js": "^3.6.5",
     "d3-celestial": "^0.7.35",
+    "flush-promises": "^1.0.2",
     "inversify-props": "^2.2.6",
     "julian": "^0.2.0",
     "neverthrow": "^4.2.1",

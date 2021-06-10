@@ -2,6 +2,10 @@ import julian from "julian";
 import Vue from "vue";
 import { CandidateSearchFilters } from "@/app/candidate/service/candidate.service.types";
 import { ClassifierData } from "@/app/classifier/entity/classifier.types";
+import { mapActions, mapGetters } from "vuex";
+import { ActionTypes as classifierActions } from "@/app/classifier/agents/actions";
+import { ActionTypes as candidatesActions } from "@/app/candidate/agents/candidates/actions";
+import { ActionTypes as candidateActions } from "@/app/candidate/agents/candidate/actions";
 
 export default Vue.extend({
   name: "FilterComponent",
@@ -90,25 +94,30 @@ export default Vue.extend({
       };
       return parsedFilter;
     },
+    ...mapActions("classifiers", [classifierActions.getClassifiers]),
+    ...mapActions("candidates", [candidatesActions.getCandidates]),
+    ...mapActions("candidate", { selectCandidate: candidateActions.select }),
 
     async fetchCandidates() {
-      await this.$store.dispatch("candidate/getCandidates", this.parseFilter());
-      await this.$store.dispatch(
-        "selected/setCandidate",
-        this.$store.getters["candidate/get"][0]
+      await this.getCandidates(this.parseFilter);
+      await this.selectCandidate(this.candidates[0]);
+    },
+  },
+
+  computed: {
+    ...mapGetters("candidates", { candidates: "get" }),
+    ...mapGetters("candidate", { selectedCandidate: "get" }),
+    ...mapGetters("classifiers", { classifiers: "get" }),
+    classifierClasses(): string[] {
+      const classifier = this.classifiers.filter(
+        (c: ClassifierData) => c.classifier_name === this.filter.classifier
       );
-      await this.$store.dispatch(
-        "detection/getDetections",
-        this.$store.getters["selected/getCandidate"].oid
-      );
-      await this.$store.dispatch(
-        "selected/setDetection",
-        this.$store.getters["detection/getFirst"]
-      );
+      return classifier.length ? classifier[0].classes : classifier;
     },
   },
 
   async mounted() {
+    await this.getClassifiers();
     await this.fetchCandidates();
   },
 
@@ -118,7 +127,7 @@ export default Vue.extend({
         <v-select
           v-model={this.filter.classifier}
           label="Classifier"
-          items={this.$store.getters["classifier/get"]}
+          items={this.classifiers}
           item-text="classifierName"
           onChange={this.setFilterClassifier}
           return-object
@@ -132,12 +141,7 @@ export default Vue.extend({
           <v-select
             v-model={this.filter.class}
             label="Class"
-            items={
-              this.$store.getters["classifier/get"].filter(
-                (c: ClassifierData) =>
-                  c.classifier_name === this.filter.classifier
-              )[0].classes
-            }
+            items={this.classifierClasses}
             item-text="classes"
             onChange={this.setFilterClass}
             return-object

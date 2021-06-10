@@ -11,6 +11,12 @@ import { IStoreCreator } from "@/store/StoreCreator";
 import { mockCandidatesData } from "@/app/candidate/entity/__tests__/candidate.mock";
 import { ICandidateRepository } from "@/app/candidate/entity";
 import { MockCandidateService } from "@/app/candidate/service/__tests__/candidate.service.mock";
+import { TestActions } from "@/shared/http/__tests__/HttpService.mock";
+import flushPromises from "flush-promises";
+import { IClassifierRepository } from "@/app/classifier/entity";
+import { MockClassifierService } from "@/app/classifier/service/__tests__/classifier.service.mock";
+import { IDetectionRepository } from "@/app/detection/entity";
+import { MockDetectionService } from "@/app/detection/service/__tests__/detection.service.mock";
 
 const mockData = {
   filter: {
@@ -29,7 +35,7 @@ Vue.use(Vuetify);
 describe("FilterComponent", () => {
   let vuetify: Vuetify;
 
-  containerBuilder()
+  containerBuilder();
   const storeCreator = container.get<IStoreCreator>(cid.StoreCreator);
   const store = storeCreator.create();
 
@@ -40,10 +46,19 @@ describe("FilterComponent", () => {
       cid.CandidateService,
       MockCandidateService
     );
+    mockSingleton<IClassifierRepository>(
+      cid.ClassifierService,
+      MockClassifierService
+    );
+    mockSingleton<IDetectionRepository>(
+      cid.DetectionService,
+      MockDetectionService
+    );
     vuetify = new Vuetify();
   });
 
-  it("should show the classifiers in the respective v-select", () => {
+  it("should show the classifiers in the respective v-select", async () => {
+    container.bind<TestActions>("ActionType").toConstantValue("ok");
     const wrapper = mount(FilterComponent, {
       localVue,
       vuetify,
@@ -53,11 +68,14 @@ describe("FilterComponent", () => {
       },
     });
 
+    await flushPromises();
+
     const vSelectClassifier = wrapper.findAll(".v-select").at(0);
-    expect(vSelectClassifier.props("items")).toBe(mockClassifiers);
+    expect(vSelectClassifier.props("items")).toStrictEqual(mockClassifiers);
   });
 
   it("should show the classes in the respective v-select, according to selected classifier", async () => {
+    container.bind<TestActions>("ActionType").toConstantValue("ok");
     const wrapper = mount(FilterComponent, {
       localVue,
       vuetify,
@@ -67,11 +85,16 @@ describe("FilterComponent", () => {
       },
     });
 
+    await flushPromises();
+
     const vSelectClassifier = wrapper.findAll(".v-select").at(1);
-    expect(vSelectClassifier.props("items")).toBe(mockClassifiers[0].classes);
+    expect(vSelectClassifier.props("items")).toStrictEqual(
+      mockClassifiers[0].classes
+    );
   });
 
   it("should fetch candidates when the search button is pressed", async () => {
+    container.bind<TestActions>("ActionType").toConstantValue("ok");
     const wrapper = mount(FilterComponent, {
       localVue,
       vuetify,
@@ -80,9 +103,29 @@ describe("FilterComponent", () => {
         return mockData;
       },
     });
+    await flushPromises();
 
     const searchButton = wrapper.find(".v-btn");
     searchButton.trigger("click");
     expect(store.state.candidates.candidates).toStrictEqual(mockCandidatesData);
+    expect(store.state.candidate.candidate).toStrictEqual(
+      mockCandidatesData[0]
+    );
+  });
+  it("should fetch candidates when mounted", async () => {
+    container.bind<TestActions>("ActionType").toConstantValue("ok");
+    mount(FilterComponent, {
+      localVue,
+      vuetify,
+      store,
+      data() {
+        return mockData;
+      },
+    });
+    await flushPromises();
+    expect(store.state.candidates.candidates).toStrictEqual(mockCandidatesData);
+    expect(store.state.candidate.candidate).toStrictEqual(
+      mockCandidatesData[0]
+    );
   });
 });
